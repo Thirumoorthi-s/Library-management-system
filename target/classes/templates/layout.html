@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">Library</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<body>
+<header th:insert="~{common/header :: header}"></header>
+
+<main>
+    <section layout:fragment="content">
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Library</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/layout">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/addBook">Add Book</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/viewBook">View Book</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <div class="jumbotron text-center">
+            <h1 class="display-4">Welcome to Our Library</h1>
+            <p class="lead">Discover a wide range of books and resources available for you.</p>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer th:insert="~{common/footer :: footer}"></footer>
+
+</body>
+</html>
+
+
+
+

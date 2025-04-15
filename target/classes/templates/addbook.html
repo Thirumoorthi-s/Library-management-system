@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Book</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+<!--  Header Fragment -->
+<!--<div th:insert="~{common/header :: header}"></div>-->
+
+<section layout:fragment="content">
+    <div class="container mt-4">
+
+
+        <!--    <h5 th:text="#{welcome.message}"></h5>-->
+        <!--    <a th:href="@{/message-expression}">welcome</a>-->
+
+        <center><h1>Add Book</h1></center>
+
+    <!-- Form to add or update book -->
+    <form th:action="@{${book.id != 0} ? '/editBook/' +  ${book.id} : '/addBook'}" th:object="${book}" method="post" class="p-4 border rounded shadow-sm bg-light">
+        <div class="form-group">
+            <label for="bookTitle"><strong>Book Title</strong></label>
+            <input type="text" id="bookTitle" th:field="*{bookTitle}" class="form-control" placeholder="Enter Book Title">
+        </div>
+
+        <div class="form-group">
+            <label for="authorName"><strong>Author Name</strong></label>
+            <input type="text" id="authorName" th:field="*{authorName}" class="form-control" placeholder="Enter Author Name">
+        </div>
+
+        <div class="form-group">
+            <label for="isbn"><strong>ISBN</strong></label>
+            <input type="text" id="isbn" th:field="*{isbn}" class="form-control" placeholder="Enter ISBN">
+        </div>
+
+        <div class="form-group">
+            <label for="publisher"><strong>Publisher</strong></label>
+            <input type="text" id="publisher" th:field="*{publisher}" class="form-control" placeholder="Enter Publisher">
+        </div>
+
+        <div class="form-group">
+            <label for="publisherYear"><strong>Publisher Year</strong></label>
+            <input type="number" id="publisherYear" th:field="*{publisherYear}" class="form-control" placeholder="Enter Publisher Year" min="1800" max="2023">
+        </div>
+
+
+        <div class="form-group">
+            <label for="librarySectionName"><strong>Library Section</strong></label>
+            <select id="librarySectionName" th:field="*{librarySectionName}" class="form-control" onchange="fetchgenres(this.value)">
+                <option value="">-- Select Library Section --</option>
+                <option th:each="librarySection : ${librarySections}" th:value="${librarySection.id}" th:text="${librarySection.librarySectionName}"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="genre"><strong>Genre</strong></label>
+            <select id="genre" th:field="*{genre}" class="form-control" onchange="fetchSubGenres(this.value)">
+                <option value="">-- Select Genre --</option>
+                <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre.genreName}"></option>
+            </select>
+        </div>
+
+
+        <div class="form-group">
+            <label><strong>Sub Genres</strong></label>
+            <div id="subgenres">
+                <div th:each="subgenre : ${subgenres}">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input"
+                               th:id="'subgenre_' + ${subgenre.id}"
+                               th:value="${subgenre.id}"
+                               th:name="subgenreIds"
+                               th:checked="${selectedSubgenreIds.contains(subgenre.id)}">
+                        <label class="form-check-label" th:for="'subgenre_' + ${subgenre.id}" th:text="${subgenre.subgenreName}"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--                <div class="form-group">-->
+        <!--            <label>Sub Genres</label>-->
+        <!--            <div id="subgenres"></div>-->
+        <!--        </div>-->
+
+
+        <div class="form-group">
+            <label><strong>Book Format</strong></label>
+            <div class="form-check">
+                <input type="radio" id="hardcover" th:field="*{bookFormat}" value="Hardcover" class="form-check-input">
+                <label for="hardcover" class="form-check-label">Hardcover</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="paperback" th:field="*{bookFormat}" value="Paperback" class="form-check-input">
+                <label for="paperback" class="form-check-label">Paperback</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="ebook" th:field="*{bookFormat}" value="E-book" class="form-check-input">
+                <label for="ebook" class="form-check-label">E-book</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="audiobook" th:field="*{bookFormat}" value="Audiobook" class="form-check-input">
+                <label for="audiobook" class="form-check-label">Audiobook</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="languageName"><strong>Language</strong></label>
+            <select id="languageName" th:field="*{languageName}" class="form-control">
+                <option value="">-- Select Language --</option>
+                <option th:each="language : ${languages}" th:value="${language.id}" th:text="${language.languageName}"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label><strong>Book Availability</strong></label>
+            <div class="form-check">
+                <input type="radio" id="available" th:field="*{bookAvailability}" value="Available" class="form-check-input">
+                <label for="available" class="form-check-label">Available</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="borrowed" th:field="*{bookAvailability}" value="Borrowed" class="form-check-input">
+                <label for="borrowed" class="form-check-label">Borrowed</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="referenceOnly" th:field="*{bookAvailability}" value="Reference Only" class="form-check-input">
+                <label for="referenceOnly" class="form-check-label">Reference Only</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="numberOfCopies"><strong>Number Of Copies</strong></label>
+            <input type="number" id="numberOfCopies" th:field="*{numberOfCopies}" class="form-control" placeholder="Enter Number Of Copies">
+        </div>
+
+
+        <div class="text-right">
+            <button type="submit" class="btn btn-primary px-4">Save</button>
+        </div>
+    </form>
+</div>
+    <script>
+        function fetchgenres(librarySectionId) {
+           if (!librarySectionId) {
+               $('#genre').empty().append('<option value="">Select genre Name</option>');
+               return;
+           }
+           $.ajax({
+               url: '/genres/' + librarySectionId,
+               method: 'GET',
+               success: function (genres) {
+                   $('#genre').empty().append('<option value="">Select genre Name</option>');
+                   genres.forEach(function (genre) {
+                       $('#genre').append('<option value="' + genre.id + '">' + genre.genreName + '</option>');
+                   });
+               },
+               error: function () {
+                   alert('Failed to load genre names.');
+               }
+           });
+    }
+
+
+       function fetchSubGenres(genreId) {
+            if (!genreId) {
+                $('#subgenres').empty();
+                return;
+            }
+            $.ajax({
+                url: '/subgenres/' + genreId,
+                method: 'GET',
+                success: function (data) {
+                    $('#subgenres').empty();
+                    data.forEach(function (subgenre) {
+                        $('#subgenres').append(`
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" name="subgenreIds"
+                                       id="subgenre_${subgenre.id}" value="${subgenre.id}">
+                                <label class="form-check-label" for="subgenre_${subgenre.id}">${subgenre.subgenreName}</label>
+                            </div>
+                        `);
+                    });
+                },
+                error: function () {
+                    alert('Failed to load sub-genres.');
+                }
+            });
+        }
+
+
+    </script>
+</section>
+<!-- Include Footer Fragment -->
+<!--<div th:insert="~{common/footer :: footer}"></div>-->
+</body>
+</html>

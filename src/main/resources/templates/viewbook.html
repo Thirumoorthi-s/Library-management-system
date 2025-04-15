@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Book</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+<!--<div th:insert="~{common/header :: header}"></div>-->
+<section layout:fragment="content">
+    <!-- Table to list all books -->
+    <div class="row mt-5">
+        <table class="table table-striped table-bordered shadow-sm">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Book Title</th>
+                <th>Author Name</th>
+                <th>ISBN</th>
+                <th>Publisher</th>
+                <th>Publisher Year</th>
+                <th>Library Section</th>
+                <th>Genre</th>
+                <th>Book Format</th>
+                <th>Language</th>
+                <th>Book Availability</th>
+                <th>Number Of Copies</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="book : ${books}">
+                <td th:text="${book.id}"></td>
+                <td th:text="${book.bookTitle}"></td>
+                <td th:text="${book.authorName}"></td>
+                <td th:text="${book.isbn}"></td>
+                <td th:text="${book.publisher}"></td>
+                <td th:text="${book.publisherYear}"></td>
+                <td th:text="${book.librarySectionName}"></td>
+                <td th:text="${book.genre}"></td>
+                <td th:text="${book.bookFormat}"></td>
+                <td th:text="${book.languageName}"></td>
+                <td th:text="${book.bookAvailability}"></td>
+                <td th:text="${book.numberOfCopies}"></td>
+                <td><a th:href="@{/editBook/{id}(id=${book.id})}" class="btn btn-success btn-sm" onclick="">Edit</a></td>
+                <td><a th:href="@{/deleteBook/{id}(id=${book.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this book?');">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<!--<div th:insert="~{common/footer :: footer}"></div>-->
+</body>
+</html>
